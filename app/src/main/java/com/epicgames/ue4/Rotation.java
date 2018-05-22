@@ -1,15 +1,21 @@
 package com.epicgames.ue4;
 
-final class Rotation {
-    final float x;
-    final float y;
-    final float z;
-    final long timestamp;
+public final class Rotation {
+    public final float vectorX;
+    public final float vectorY;
+    public final float vectorZ;
+    public final float rotX;
+    public final float rotY;
+    public final float rotZ;
+    public final long timestamp;
 
-    Rotation(final float x, final float y, final float z, final long timestamp) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public Rotation(final float vectorX, final float vectorY, final float vectorZ, final float rotX, final float rotY, final float rotZ, long timestamp) {
+        this.vectorX = vectorX;
+        this.vectorY = vectorY;
+        this.vectorZ = vectorZ;
+        this.rotX = rotX;
+        this.rotY = rotY;
+        this.rotZ = rotZ;
         this.timestamp = timestamp;
     }
 }
