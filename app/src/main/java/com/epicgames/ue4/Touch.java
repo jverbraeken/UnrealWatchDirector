@@ -9,20 +9,11 @@ public final class Touch {
      * 2 = released
      */
     public final byte state;
-    public final long timestamp;
 
     public Touch(final float x, final float y, final byte state) {
         this.x = x;
         this.y = y;
         this.state = state;
-        this.timestamp = System.currentTimeMillis();
-    }
-
-    public Touch(final float x, final float y, final byte state, final long timestamp) {
-        this.x = x;
-        this.y = y;
-        this.state = state;
-        this.timestamp = timestamp;
     }
 
     @Override
@@ -42,8 +33,8 @@ public final class Touch {
 
     @Override
     public int hashCode() {
-        int result = this.x == +0.0f ? 0 : Float.floatToIntBits(this.x);
-        result = 31 * result + (this.y == +0.0f ? 0 : Float.floatToIntBits(this.y));
+        int result = this.x == 0.0f ? 0 : Float.floatToIntBits(this.x);
+        result = 31 * result + (this.y == 0.0f ? 0 : Float.floatToIntBits(this.y));
         result = 31 * result + this.state;
         return result;
     }

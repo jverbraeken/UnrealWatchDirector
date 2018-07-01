@@ -1,9 +1,5 @@
 package com.epicgames.ue4.runnables;
 
-import android.util.Log;
-
-import com.epicgames.ue4.Acceleration;
-import com.epicgames.ue4.Rotation;
 import com.epicgames.ue4.Touch;
 import com.epicgames.ue4.WearListenerService;
 
@@ -16,15 +12,14 @@ import java.nio.ByteBuffer;
 
 import static com.epicgames.ue4.WearListenerService.INET_ADDRESS;
 import static com.epicgames.ue4.WearListenerService.PORT;
-import static com.epicgames.ue4.WearListenerService.TAG;
 
 public final class SendSensorDataRunnable implements Runnable {
     private final DatagramSocket datagramSocket;
-    private final Rotation rotation;
-    private final Acceleration acceleration;
+    private final float[] rotation;
+    private final float[] acceleration;
     private final Touch touch;
 
-    SendSensorDataRunnable(final DatagramSocket datagramSocket, final Rotation rotation, final Acceleration acceleration, final Touch touch) {
+    SendSensorDataRunnable(final DatagramSocket datagramSocket, final float[] rotation, final float[] acceleration, final Touch touch) {
         this.datagramSocket = datagramSocket;
         this.rotation = rotation;
         this.acceleration = acceleration;
@@ -36,18 +31,14 @@ public final class SendSensorDataRunnable implements Runnable {
         try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
              DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream)) {
             dataOutputStream.writeByte(WearListenerService.COMTP_SENSOR_DATA);
-            dataOutputStream.writeFloat(rotation.vectorX);
-            dataOutputStream.writeFloat(rotation.vectorY);
-            dataOutputStream.writeFloat(rotation.vectorZ);
-            dataOutputStream.writeFloat(rotation.rotX);
-            dataOutputStream.writeFloat(rotation.rotY);
-            dataOutputStream.writeFloat(rotation.rotZ);
-            dataOutputStream.writeLong(this.rotation.timestamp);
+            dataOutputStream.writeFloat(rotation[0]);
+            dataOutputStream.writeFloat(rotation[1]);
+            dataOutputStream.writeFloat(rotation[2]);
+            dataOutputStream.writeFloat(rotation[3]);
 
-            dataOutputStream.writeFloat(this.acceleration.x);
-            dataOutputStream.writeFloat(this.acceleration.y);
-            dataOutputStream.writeFloat(this.acceleration.z);
-            dataOutputStream.writeLong(this.acceleration.timestamp);
+            dataOutputStream.writeFloat(acceleration[0]);
+            dataOutputStream.writeFloat(acceleration[1]);
+            dataOutputStream.writeFloat(acceleration[2]);
 
             if (this.touch.equals(WearListenerService.NO_TOUCH)) {
                 dataOutputStream.writeFloat(-1);
@@ -58,7 +49,6 @@ public final class SendSensorDataRunnable implements Runnable {
                 dataOutputStream.writeFloat(this.touch.y);
                 dataOutputStream.writeByte(this.touch.state);
             }
-            dataOutputStream.writeLong(this.touch.timestamp);
 
             final byte[] byteArray = byteArrayOutputStream.toByteArray();
             final byte[] bytes = ByteBuffer.allocate(byteArray.length).put(byteArray).array();
